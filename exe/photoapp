@@ -1,0 +1,24 @@
+#! /usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
+
+require 'optparse'
+
+#options = {}
+
+#OptionParser.new do |opts|
+
+  #if ARGV.first == 'write'
+    #options[:accept] = ARGV.shift
+  #end
+
+  #if !(options[:list] || options[:new] || options[:accept])
+    #options[:normal] = true
+  #end
+
+  #opts.on("-c", "--context NUMBER", Integer, "On diff errors, show NUMBER of lines of surrounding context (default: 2)") do |context|
+    #options[:context] = context
+  #end
+#end
+
+puts 'awesome'
