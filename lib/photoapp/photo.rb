@@ -11,7 +11,7 @@ module Photoapp
     end
 
     def image
-      @image || = Magick::Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity)
+      @image ||= Magick::Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity)
     end
 
     def watermark
@@ -19,22 +19,33 @@ module Photoapp
     end
 
     def with_url
-      @printable ||= add_url(watermark.dup)
+      @printable ||= begin
+        light_url = add_url("#fff")
+        dark_url  = add_url("#000", true).blur_image(radius=6.0, sigma=2.0)
+        watermark.dup
+          .composite(dark_url, SouthEastGravity, OverCompositeOp)
+          .composite(light_url, SouthEastGravity, OverCompositeOp)
+      end
     end
 
-    def add_url(image)
+    def add_url(color, stroke=false)
+      image = Image.new(400,100) { self.background_color = "rgba(255, 255, 255, 0)" }
       text = Draw.new
       text.annotate(image, 0, 0, 60, 50, "#{Photoapp.config['url_base']}/#{short}.jpg") do
         text.gravity = SouthEastGravity
-        text.pointsize = 26
-        text.fill = "rgba(255, 255, 255, 0.7)"
-        text.font = "SourceSansPro-Semibold.ttf"
-        text.stroke = "none"
+        text.pointsize = Photoapp.config['font_size']
+        text.fill = color
+        text.font = Photoapp.config['font']
+        if stroke
+          text.stroke = color
+        end
       end
       image
     end
 
-    def write(dest)
+    def write
+      FileUtils.mkdir_p(File.dirname(watermark_dest))
+      FileUtils.mkdir_p(File.dirname(with_url_dest))
       watermark.write watermark_dest
       with_url.write with_url_dest
       cleanup
@@ -45,16 +56,12 @@ module Photoapp
       with_url.destroy!
     end
 
-    def file_path
-      File.expand_path(File.dirname(file))
-    end
-
     def watermark_dest
-      File.join(file_path.sub('inbound', 'upload'), short + '.jpg')
+      File.join(Photoapp.config['upload_dir'], short + '.jpg')
     end
 
     def with_url_dest
-      watermark_dest.sub('upload', 'print')
+      File.join(Photoapp.config['print_dir'], short + '.jpg')
     end
 
     def short

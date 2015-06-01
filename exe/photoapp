@@ -3,22 +3,21 @@
 $LOAD_PATH.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
 
 require 'optparse'
+require "photoapp"
 
-#options = {}
+options = {}
 
-#OptionParser.new do |opts|
+unless ARGV.first.nil?
+end
 
-  #if ARGV.first == 'write'
-    #options[:accept] = ARGV.shift
-  #end
+OptionParser.new do |opts|
+  opts.on("-c", "--config PATH", String, "Path to config file") do |config|
+    options['config'] = config
+  end
 
-  #if !(options[:list] || options[:new] || options[:accept])
-    #options[:normal] = true
-  #end
+  opts.on("-s", "--source PATH", String, "Path to photos directory") do |source|
+    options['source'] = source
+  end
+end
 
-  #opts.on("-c", "--context NUMBER", Integer, "On diff errors, show NUMBER of lines of surrounding context (default: 2)") do |context|
-    #options[:context] = context
-  #end
-#end
-
-puts 'awesome'
+Photoapp.process(options)
