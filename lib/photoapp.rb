@@ -1,5 +1,6 @@
 require "photoapp/version"
 require "photoapp/photo"
+require "photoapp/s3"
 require "safe_yaml"
 
 module Photoapp
@@ -43,10 +44,10 @@ module Photoapp
       @config['source'] = path
     end
 
-    edit_photos
+    process_photos
   end
 
-  def edit_photos
+  def process_photos
     logo = Magick::Image.read(config['watermark']).first
     tmp = File.join(config['source'], '.tmp')
     FileUtils.mkdir_p(tmp)
@@ -66,5 +67,11 @@ module Photoapp
 
   def load_photos
     Dir[File.join(config['source'], 'inbound', "*.*")]
+  end
+
+  def print_photos
+    unless @photos.empty?
+      system "lpr #{@photos.join(' ')}"
+    end
   end
 end
