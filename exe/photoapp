@@ -7,9 +7,6 @@ require "photoapp"
 
 options = {}
 
-unless ARGV.first.nil?
-end
-
 OptionParser.new do |opts|
   opts.on("-c", "--config PATH", String, "Path to config file") do |config|
     options['config'] = config
@@ -20,4 +17,16 @@ OptionParser.new do |opts|
   end
 end
 
-Photoapp.process(options)
+p = Photoapp::Session.new(options)
+
+if ARGV.first == 'process'
+  ARGV.shift
+  p.process
+elsif ARGV.first == 'upload'
+  ARGV.shift
+  p.upload
+elsif ARGV.first == 'print'
+  ARGV.shift
+  p.print
+end
+

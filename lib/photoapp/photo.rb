@@ -3,15 +3,20 @@ require 'RMagick'
 module Photoapp
   class Photo
     include Magick
-    attr_accessor :file, :logo, :image
+    attr_accessor :file, :logo, :image, :config
 
-    def initialize(file, logo)
+    def initialize(file, logo, config={})
       @file = file
       @logo = logo
+      @config = config
+    end
+
+    def config
+      @config
     end
 
     def image
-      @image ||= Magick::Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity)
+      @image ||= Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity)
     end
 
     def watermark
@@ -29,13 +34,14 @@ module Photoapp
     end
 
     def add_url(color, stroke=false)
+      setting = config
       image = Image.new(400,100) { self.background_color = "rgba(255, 255, 255, 0)" }
       text = Draw.new
-      text.annotate(image, 0, 0, 60, 50, "#{Photoapp.config['url_base']}/#{short}.jpg") do
+      text.annotate(image, 0, 0, 60, 50, "#{setting['url_base']}/#{short}.jpg") do
         text.gravity = SouthEastGravity
-        text.pointsize = Photoapp.config['font_size']
+        text.pointsize = setting['font_size']
         text.fill = color
-        text.font = Photoapp.config['font']
+        text.font = setting['font']
         if stroke
           text.stroke = color
         end
@@ -57,11 +63,11 @@ module Photoapp
     end
 
     def watermark_dest
-      File.join(Photoapp.config['upload_dir'], short + '.jpg')
+      File.join(config['upload_dir'], short + '.jpg')
     end
 
     def with_url_dest
-      File.join(Photoapp.config['print_dir'], short + '.jpg')
+      File.join(config['print_dir'], short + '.jpg')
     end
 
     def short

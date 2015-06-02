@@ -8,3 +8,6 @@
 /spec/reports/
 /tmp/
 .DS_Store
+.tmp
+test/print
+test/upload
