@@ -36,9 +36,8 @@ module Photoapp
   end
 
   def process(options={})
-    if options['config']
-      Photoapp.load_config(options['config'])
-    end
+    options['config'] ||= 'photoapp.yml'
+    Photoapp.load_config(options['config'])
 
     if options['source'] && File.exist?(options['source'])
       @config['source'] = path
@@ -73,5 +72,9 @@ module Photoapp
     unless @photos.empty?
       system "lpr #{@photos.join(' ')}"
     end
+  end
+
+  def upload_photos
+    S3.new(@config).push
   end
 end
