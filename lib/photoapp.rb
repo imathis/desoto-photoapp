@@ -5,6 +5,7 @@ require "safe_yaml"
 
 module Photoapp
   class Session
+    attr_accessor :photos
 
     def initialize(options={})
       @photos = []
@@ -47,6 +48,7 @@ module Photoapp
 
     def process
       logo = Magick::Image.read(config['watermark']).first
+      photos = []
       tmp = source('.tmp')
       FileUtils.mkdir_p(tmp)
 
@@ -58,10 +60,10 @@ module Photoapp
         FileUtils.mv f, tmp
         path = File.join(tmp, File.basename(f))
         `automator -i #{path} #{gem_dir("exe/adjust-image.workflow")}`
-        @photos << Photo.new(path, logo, config)
+        photos << Photo.new(path, logo, self)
       end
 
-      @photos.each do |p|
+      photos.each do |p|
         p.write
         FileUtils.rm_rf tmp
       end

@@ -3,12 +3,13 @@ require 'RMagick'
 module Photoapp
   class Photo
     include Magick
-    attr_accessor :file, :logo, :image, :config
+    attr_accessor :file, :logo, :image, :config, :session
 
-    def initialize(file, logo, config={})
+    def initialize(file, logo, session)
       @file = file
       @logo = logo
-      @config = config
+      @session = session
+      @config = session.config
     end
 
     def config
@@ -75,7 +76,7 @@ module Photoapp
         source = [*?a..?z] - ['o', 'l'] + [*2..9]
         short = ''
         8.times { short << source.sample.to_s }
-        short
+        session.photos << short + '.jpg'
       end
     end
 
