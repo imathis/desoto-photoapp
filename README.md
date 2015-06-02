@@ -18,9 +18,10 @@ Or install it yourself as:
 
     $ gem install desoto-photoapp
 
-## Usage
+## Setup
 
 This app uses CUPS to print. To configure your CUPS defaults:
+
 - visit [The CUPS printers page](http://127.0.0.1:631/printers/)
 - Choose the printer you want to configure
 - Select "Set Default Options" from the Administration drop-down. 
@@ -28,10 +29,15 @@ This app uses CUPS to print. To configure your CUPS defaults:
 
 ### Default printer settings
 
+These are the default settings for an Epson Stylus Photo R280. If using a different printer, use whatever settings are equivalent.
+
 ```
 Page Setup: Sheet Feeder - Borderless
 Paper Size: 5x7 in
 Media Type: Ulta Premium Photo Paper Glossy
+
+... further down ...
+
 MediaType: Ulta Premium Photo Paper Glossy
 Media Size: 5x7 in (Sheet Feeder - Borderless)
 ```
