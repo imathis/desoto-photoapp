@@ -11,3 +11,5 @@
 .tmp
 test/print
 test/upload
+test/inbound
+photoapp.yml

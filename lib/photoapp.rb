@@ -1,7 +1,8 @@
 require "photoapp/version"
 require "photoapp/photo"
 require "photoapp/s3"
-require "safe_yaml"
+require 'yaml'
+require 'colorator'
 
 module Photoapp
   class Session
@@ -28,7 +29,7 @@ module Photoapp
         }
         
         if File.exist?(c['config'])
-          c = c.merge(SafeYaml.load_file(file) || {})
+          c = c.merge(YAML.load(File.read(c['config'])) || {})
         end
 
         c['print_dir'] ||= File.join(c['source'], 'print')
@@ -65,23 +66,14 @@ module Photoapp
 
       photos.each do |p|
         p.write
+        #p.print
         FileUtils.rm_rf tmp
       end
     end
 
     def load_photos
-      ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(source['print_dir'], f) }
-      Dir[source('inbound/*.jpg')]
-    end
-
-    def print
-      photos = Dir[File.join(config['print_dir'], '*.jpg')]
-
-      unless photos.empty?
-        system "lpr #{photos.join(' ')}"
-      else
-        puts "No photos found in #{config['print_dir']}"
-      end
+      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(source('inbound'), f) }
+      Dir[*files]
     end
 
     def empty_print_queue?
@@ -93,6 +85,7 @@ module Photoapp
 
     def upload
       S3.new(@config).push
+      FileUtils.rm_rf config['upload_dir']
     end
   end
 end

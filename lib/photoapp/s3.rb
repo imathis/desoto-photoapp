@@ -11,19 +11,19 @@ module Photoapp
         abort "Deploying to S3 requires the aws-sdk-v1 gem. Install with `gem install aws-sdk-v1`."
       end
       @options     = options
-      @local       = options[:upload_dir]        || 'upload'
-      @bucket_name = options[:bucket_name]
-      @access_key  = options[:access_key_id]     || ENV['AWS_ACCESS_KEY_ID']
-      @secret_key  = options[:secret_access_key] || ENV['AWS_SECRET_ACCESS_KEY']
-      @region      = options[:region]            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
-      @distro_id   = options[:distribution_id]   || ENV['AWS_DISTRIBUTION_ID']
-      @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
-      @verbose     = options[:verbose]
-      @incremental = options[:incremental]
-      @delete      = options[:delete]
-      @headers     = options[:headers]           || []
+      @local       = options['upload_dir']        || 'upload'
+      @bucket_name = options['bucket_name']
+      @access_key  = options['access_key_id']     || ENV['AWS_ACCESS_KEY_ID']
+      @secret_key  = options['secret_access_key'] || ENV['AWS_SECRET_ACCESS_KEY']
+      @region      = options['region']            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
+      @distro_id   = options['distribution_id']   || ENV['AWS_DISTRIBUTION_ID']
+      @remote_path = (options['remote_path']      || '/').sub(/^\//,'')
+      @verbose     = options['verbose']
+      @incremental = options['incremental']
+      @delete      = options['delete']
+      @headers     = options['headers']           || []
       @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
-      @pull_dir    = options[:dir]
+      @pull_dir    = options['dir']
       connect
     end
 

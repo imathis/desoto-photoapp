@@ -51,11 +51,18 @@ module Photoapp
     end
 
     def write
-      FileUtils.mkdir_p(File.dirname(watermark_dest))
-      FileUtils.mkdir_p(File.dirname(with_url_dest))
-      watermark.write watermark_dest
-      with_url.write with_url_dest
+      puts "writing #{upload_dest}"
+      puts "writing #{print_dest}"
+      FileUtils.mkdir_p(File.dirname(upload_dest))
+      FileUtils.mkdir_p(File.dirname(print_dest))
+      watermark.write upload_dest
+      with_url.write print_dest
       cleanup
+    end
+
+    # Handle printing
+    def print
+      system "lpr #{print_dest}"
     end
 
     def cleanup
@@ -63,11 +70,11 @@ module Photoapp
       with_url.destroy!
     end
 
-    def watermark_dest
+    def upload_dest
       File.join(config['upload_dir'], short + '.jpg')
     end
 
-    def with_url_dest
+    def print_dest
       File.join(config['print_dir'], short + '.jpg')
     end
 
@@ -77,6 +84,7 @@ module Photoapp
         short = ''
         8.times { short << source.sample.to_s }
         session.photos << short + '.jpg'
+        short
       end
     end
 
