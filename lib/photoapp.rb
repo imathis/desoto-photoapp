@@ -72,7 +72,7 @@ module Photoapp
       load_photos.each do |f|
         FileUtils.mv f, tmp
         path = File.join(tmp, File.basename(f))
-        `automator -i #{path} #{gem_dir("exe/adjust-image.workflow")}`
+        `automator -i #{path} #{gem_dir("lib/adjust-image.workflow")}`
         photos << Photo.new(path, logo, self)
       end
 
