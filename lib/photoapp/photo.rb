@@ -65,7 +65,7 @@ module Photoapp
       system "lpr #{print_dest}"
     end
 
-    def import
+    def add_to_photos
       `automator -i #{print_dest} #{gem_dir("exe/import-photos.workflow")}`
     end
 
@@ -85,11 +85,11 @@ module Photoapp
     def short
       @short ||= begin
         now = Time.now
-        date = "#{now.strftime('%y')}#{now.day}#{now.month}"
+        date = "#{now.strftime('%y')}#{now.strftime('%d')}#{now.month}"
         source = [*?a..?z] - ['o', 'l'] + [*2..9]
         short = ''
         5.times { short << source.sample.to_s }
-        short = "#{date}#{short}"
+        short = "#{short}#{date}"
         session.photos << short + '.jpg'
         short
       end

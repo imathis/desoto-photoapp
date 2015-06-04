@@ -78,10 +78,10 @@ module Photoapp
 
       photos.each do |p|
         p.write
-        p.import
-        #p.print
-        FileUtils.rm_rf tmp
+        p.add_to_photos
+        p.print
       end
+      FileUtils.rm_rf tmp
     end
 
     def load_photos
