@@ -7,27 +7,24 @@ This is a tool for automating the photo system at DeSoto Caverns.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'desoto-photoapp'
+gem 'desoto-photoapp', github: 'imathis/desoto-photoapp'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install desoto-photoapp
+Install the [Automator actions](https://photosautomation.com/index.html) for importing photos. Download the [installer here](https://photosautomation.com/installer.zip).
 
 ## Setup
 
 This app uses CUPS to print. To configure your CUPS defaults:
 
-- visit [The CUPS printers page](http://127.0.0.1:631/printers/)
+- Visit [The CUPS printers page](http://127.0.0.1:631/printers/)
 - Choose the printer you want to configure
 - Select "Set Default Options" from the Administration drop-down. 
 - Change the profile as explained below and save.
 
-Install the [Automator actions](https://photosautomation.com/index.html) for importing photos. Download the [installer here](https://photosautomation.com/installer.zip).
 
 ### Default printer settings
 

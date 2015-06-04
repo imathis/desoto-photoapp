@@ -17,16 +17,23 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-p = Photoapp::Session.new(options)
+if ARGV.first == 'setup'
+  ARGV.shift
+  if `brew list imagemagick` =~ /Error:/
+    system "brew install imagemagick"
+  end
+  system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
+else
+  p = Photoapp::Session.new(options)
 
-if ARGV.first == 'process'
-  ARGV.shift
-  p.process
-elsif ARGV.first == 'upload'
-  ARGV.shift
-  p.upload
-elsif ARGV.first == 'print'
-  ARGV.shift
-  p.print
+  if ARGV.first == 'process'
+    ARGV.shift
+    p.process
+  elsif ARGV.first == 'upload'
+    ARGV.shift
+    p.upload
+  elsif ARGV.first == 'print'
+    ARGV.shift
+    p.print
+  end
 end
-
