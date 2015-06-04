@@ -81,6 +81,7 @@ module Photoapp
         p.add_to_photos
         p.print
       end
+
       FileUtils.rm_rf tmp
     end
 

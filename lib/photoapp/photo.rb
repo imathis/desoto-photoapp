@@ -66,7 +66,7 @@ module Photoapp
     end
 
     def add_to_photos
-      `automator -i #{print_dest} #{gem_dir("exe/import-photos.workflow")}`
+      `automator -i #{print_dest} #{@session.gem_dir("exe/import-photos.workflow")}`
     end
 
     def cleanup
