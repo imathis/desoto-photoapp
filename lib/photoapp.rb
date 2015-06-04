@@ -6,55 +6,67 @@ require 'colorator'
 
 module Photoapp
   class Session
-    attr_accessor :photos
+    attr_accessor :photos, :print, :upload
+
+    ROOT = File.expand_path('~/cave.pics') # where photos are stored
+
+    # relative to root
+    CONFIG_FILE = 'photoapp.yml'
+    UPLOAD = 'upload'
+    PRINT = 'print'
+
 
     def initialize(options={})
       @photos = []
       @config = config(options)
-
-      if options['source'] && File.exist?(options['source'])
-        @config['source'] = path
-      end
     end
 
     def config(options={})
-      @config || begin 
-        c = {
-          'config' => 'photoapp.yml',
-          'url_base' => 'cave.pics',
-          'source' => Dir.pwd,
+      @config || begin
+
+        config = {
+          'source' => Dir.pwd, # where photos are located
+          'url_base' => 'www.cave.pics',
           'watermark' => gem_dir('assets', 'watermark.png'),
           'font' => gem_dir('assets', "SourceSansPro-Semibold.ttf"),
-          'font_size' => 30
+          'font_size' => 30,
+          'config' => 'photoapp.yml',
+          'upload' => 'upload',
+          'print' => 'print'
         }
-        
-        if File.exist?(c['config'])
-          c = c.merge(YAML.load(File.read(c['config'])) || {})
+ 
+        config_file = root(options['config'] || config['config'])
+
+        config['source'] = options['source'] || config['source']
+
+        if File.exist?(config_file)
+          config.merge!(YAML.load(File.read(config_file)) || {})
         end
 
-        c['print_dir'] ||= File.join(c['source'], 'print')
-        c['upload_dir'] ||= File.join(c['source'], 'upload')
+        config['upload'] = root(config['upload'])
+        config['print'] = root(config['print'])
 
-        c
+        config
       end
+
     end
 
     def gem_dir(*paths)
       File.expand_path(File.join(File.dirname(__FILE__), '..', *paths))
     end
 
-    def source(path='')
-      File.join(config['source'], path)
+    def root(path='')
+      File.expand_path(File.join(ROOT, path))
     end
 
     def process
       logo = Magick::Image.read(config['watermark']).first
       photos = []
-      tmp = source('.tmp')
+      tmp = root('.tmp')
       FileUtils.mkdir_p(tmp)
 
       if empty_print_queue?
-        FileUtils.rm_rf(config['print_dir'])
+        FileUtils.rm_rf(config['print'])
       end
 
       load_photos.each do |f|
@@ -66,13 +78,15 @@ module Photoapp
 
       photos.each do |p|
         p.write
+        p.import
         #p.print
         FileUtils.rm_rf tmp
       end
     end
 
     def load_photos
-      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(source('inbound'), f) }
+      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['source'], f) }
+
       Dir[*files]
     end
 
@@ -85,7 +99,7 @@ module Photoapp
 
     def upload
       S3.new(@config).push
-      FileUtils.rm_rf config['upload_dir']
+      FileUtils.rm_rf config['upload']
     end
   end
 end

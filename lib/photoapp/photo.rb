@@ -36,7 +36,7 @@ module Photoapp
 
     def add_url(color, stroke=false)
       setting = config
-      image = Image.new(400,100) { self.background_color = "rgba(255, 255, 255, 0)" }
+      image = Image.new(800,100) { self.background_color = "rgba(255, 255, 255, 0)" }
       text = Draw.new
       text.annotate(image, 0, 0, 60, 50, "#{setting['url_base']}/#{short}.jpg") do
         text.gravity = SouthEastGravity
@@ -65,24 +65,31 @@ module Photoapp
       system "lpr #{print_dest}"
     end
 
+    def import
+      `automator -i #{print_dest} #{gem_dir("exe/import-photos.workflow")}`
+    end
+
     def cleanup
       watermark.destroy!
       with_url.destroy!
     end
 
     def upload_dest
-      File.join(config['upload_dir'], short + '.jpg')
+      File.join(config['upload'], short + '.jpg')
     end
 
     def print_dest
-      File.join(config['print_dir'], short + '.jpg')
+      File.join(config['print'], short + '.jpg')
     end
 
     def short
       @short ||= begin
+        now = Time.now
+        date = "#{now.strftime('%y')}#{now.day}#{now.month}"
         source = [*?a..?z] - ['o', 'l'] + [*2..9]
         short = ''
-        8.times { short << source.sample.to_s }
+        5.times { short << source.sample.to_s }
+        short = "#{date}#{short}"
         session.photos << short + '.jpg'
         short
       end

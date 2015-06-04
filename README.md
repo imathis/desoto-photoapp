@@ -27,6 +27,8 @@ This app uses CUPS to print. To configure your CUPS defaults:
 - Select "Set Default Options" from the Administration drop-down. 
 - Change the profile as explained below and save.
 
+Install the [Automator actions](https://photosautomation.com/index.html) for importing photos. Download the [installer here](https://photosautomation.com/installer.zip).
+
 ### Default printer settings
 
 These are the default settings for an Epson Stylus Photo R280. If using a different printer, use whatever settings are equivalent.
