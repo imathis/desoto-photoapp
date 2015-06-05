@@ -184,7 +184,7 @@
 					<key>popupVisibility</key>
 					<false/>
 					<key>shouldDeleteSourceFiles</key>
-					<true/>
+					<false/>
 					<key>shouldSkipDuplicateChecking</key>
 					<false/>
 					<key>targetAlbumName</key>
