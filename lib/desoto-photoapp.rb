@@ -5,6 +5,12 @@ require 'yaml'
 require 'colorator'
 
 module Photoapp
+  extend self
+
+  def gem_dir(*paths)
+    File.expand_path(File.join(File.dirname(__FILE__), '..', *paths))
+  end
+
   class Session
     attr_accessor :photos, :print, :upload
 
@@ -27,8 +33,8 @@ module Photoapp
         config = {
           'source' => Dir.pwd, # where photos are located
           'url_base' => 'www.cave.pics',
-          'watermark' => gem_dir('assets', 'watermark.png'),
-          'font' => gem_dir('assets', "SourceSansPro-Semibold.ttf"),
+          'watermark' => Photoapp.gem_dir('assets', 'watermark.png'),
+          'font' => Photoapp.gem_dir('assets', "SourceSansPro-Semibold.ttf"),
           'font_size' => 30,
           'config' => 'photoapp.yml',
           'upload' => 'upload',
@@ -51,10 +57,6 @@ module Photoapp
 
     end
 
-    def gem_dir(*paths)
-      File.expand_path(File.join(File.dirname(__FILE__), '..', *paths))
-    end
-
     def root(path='')
       File.expand_path(File.join(ROOT, path))
     end
@@ -72,7 +74,7 @@ module Photoapp
       load_photos.each do |f|
         FileUtils.mv f, tmp
         path = File.join(tmp, File.basename(f))
-        `automator -i #{path} #{gem_dir("lib/adjust-image.workflow")}`
+        `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
         photos << Photo.new(path, logo, self)
       end
 
