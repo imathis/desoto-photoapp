@@ -93,8 +93,9 @@ module Photoapp
 
     def empty_print_queue?
       if printer = `lpstat -d`
-        printer = printer.scan(/:\s*(.+)/).flatten.first.strip
-        `lpstat -o -P #{printer}`.strip == ''
+        if printer = printer.scan(/:\s*(.+)/).flatten.first
+          `lpstat -o -P #{printer}`.strip == ''
+        end
       end
     end
 
