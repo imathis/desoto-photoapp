@@ -1,6 +1,6 @@
-require "photoapp/version"
-require "photoapp/photo"
-require "photoapp/s3"
+require "desoto-photoapp/version"
+require "desoto-photoapp/photo"
+require "desoto-photoapp/s3"
 require 'yaml'
 require 'colorator'
 
