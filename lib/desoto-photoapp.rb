@@ -65,15 +65,15 @@ module Photoapp
       logo = Magick::Image.read(config['watermark']).first
       photos = []
       tmp = root('.tmp')
-      FileUtils.mkdir_p(tmp)
+      FileUtils.mkdir_p tmp
 
       if empty_print_queue?
         FileUtils.rm_rf(config['print'])
       end
 
       load_photos.each do |f|
-        FileUtils.mv f, tmp
         path = File.join(tmp, File.basename(f))
+        FileUtils.mv f, path
         `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
         photos << Photo.new(path, logo, self)
       end
@@ -90,7 +90,7 @@ module Photoapp
     def load_photos
       files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['source'], f) }
 
-      Dir[*files]
+      Dir[*files].uniq
     end
 
     def empty_print_queue?
