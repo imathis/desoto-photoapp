@@ -7,7 +7,7 @@ This is a tool for automating the photo system at DeSoto Caverns.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'desoto-photoapp', github: 'imathis/desoto-photoapp'
+gem 'desoto-photoapp'
 ```
 
 And then execute:
