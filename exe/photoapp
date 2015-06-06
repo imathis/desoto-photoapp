@@ -18,7 +18,6 @@ if ARGV.first == 'setup'
   if `brew list imagemagick` =~ /Error:/
     system "brew install imagemagick"
   end
-  system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
 else
 
   if ARGV.first == 'process'
