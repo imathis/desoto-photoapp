@@ -60,11 +60,6 @@ module Photoapp
       cleanup
     end
 
-    # Handle printing
-    def print
-      system "lpr #{print_dest}"
-    end
-
     def add_to_photos
       `automator -i #{config['print']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
     end

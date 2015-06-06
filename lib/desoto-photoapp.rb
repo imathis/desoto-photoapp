@@ -11,6 +11,12 @@ module Photoapp
     File.expand_path(File.join(File.dirname(__FILE__), '..', *paths))
   end
 
+  # Handle printing
+  def print(path)
+    system "lpr #{path}"
+  end
+
+
   class Session
     attr_accessor :photos, :print, :upload
 
@@ -81,8 +87,10 @@ module Photoapp
       photos.each do |p|
         p.write
         p.add_to_photos
-        p.print
+        Photoapp.print(p.print_dest)
       end
+
+      upload
 
       FileUtils.rm_rf tmp
     end

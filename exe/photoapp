@@ -3,17 +3,13 @@
 $LOAD_PATH.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
 
 require 'optparse'
-require "desoto-photoapp"
+require 'desoto-photoapp'
 
 options = {}
 
 OptionParser.new do |opts|
   opts.on("-c", "--config PATH", String, "Path to config file") do |config|
     options['config'] = config
-  end
-
-  opts.on("-s", "--source PATH", String, "Path to photos directory") do |source|
-    options['source'] = source
   end
 end.parse!
 
@@ -24,16 +20,15 @@ if ARGV.first == 'setup'
   end
   system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
 else
-  p = Photoapp::Session.new(options)
 
   if ARGV.first == 'process'
     ARGV.shift
-    p.process
+    options['source'] = ARGV.shift
+    Photoapp::Session.new(options).process
   elsif ARGV.first == 'upload'
+    Photoapp::Session.new(options).upload
+  elsif ARGV.first == 'reprint'
     ARGV.shift
-    p.upload
-  elsif ARGV.first == 'print'
-    ARGV.shift
-    p.print
+    Photoapp.print(ARGV.shift)
   end
 end
