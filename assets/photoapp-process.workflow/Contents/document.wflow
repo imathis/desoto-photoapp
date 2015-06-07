@@ -61,7 +61,7 @@
 					<key>COMMAND_STRING</key>
 					<string>say "processing photos"
 source ~/.bash_profile
-photoapp process ~/cave.pics/inbound</string>
+photoapp process "$(dirname $1)"</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -86,7 +86,7 @@ photoapp process ~/cave.pics/inbound</string>
 				<key>Class Name</key>
 				<string>RunShellScriptAction</string>
 				<key>IgnoresInput</key>
-				<true/>
+				<false/>
 				<key>InputUUID</key>
 				<string>7F4528A5-9FDB-456C-A6E9-590E2E31F836</string>
 				<key>Keywords</key>
