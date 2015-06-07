@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
 
 require 'optparse'
-require 'desoto-photoapp'
+require 'photoapp'
 
 options = {}
 
@@ -16,9 +16,17 @@ end.parse!
 if ARGV.first == 'setup'
   ARGV.shift
   if `brew list imagemagick` =~ /Error:/
-    system "brew install imagemagick"
+    system "brew update && brew install imagemagick"
   end
-  system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
+
+  unless `ls /Library/Automator` =~ /Import Files into Photos/
+    system "say 'please install Automator actions for Photos app'"
+    system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
+  end
+
+  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{File.expand_path("~/Library/Workflows/Applications/Folder\ Actions/")}"
+  system "open /System/Library/CoreServices/Folder\ Actions\ Setup.app"
+  system "ln -s #{Photoapp.gem_dir('assets/Reprint.app')} /Applications/"
 else
 
   if ARGV.first == 'process'
@@ -27,8 +35,5 @@ else
     Photoapp::Session.new(options).process
   elsif ARGV.first == 'upload'
     Photoapp::Session.new(options).upload
-  elsif ARGV.first == 'reprint'
-    ARGV.shift
-    Photoapp.print(ARGV.shift)
   end
 end

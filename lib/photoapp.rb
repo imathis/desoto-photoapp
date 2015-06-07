@@ -1,6 +1,6 @@
-require "desoto-photoapp/version"
-require "desoto-photoapp/photo"
-require "desoto-photoapp/s3"
+require "photoapp/version"
+require "photoapp/photo"
+require "photoapp/s3"
 require 'yaml'
 require 'colorator'
 
@@ -86,11 +86,10 @@ module Photoapp
 
       photos.each do |p|
         p.write
+        upload
         p.add_to_photos
         Photoapp.print(p.print_dest)
       end
-
-      upload
 
       FileUtils.rm_rf tmp
     end
