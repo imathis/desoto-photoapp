@@ -24,9 +24,10 @@ if ARGV.first == 'setup'
     system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
   end
 
-  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{File.expand_path("~/Library/Workflows/Applications/Folder\ Actions/")}"
-  system "open /System/Library/CoreServices/Folder\ Actions\ Setup.app"
   system "ln -s #{Photoapp.gem_dir('assets/Reprint.app')} /Applications/"
+  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{File.expand_path("~/Library/Workflows/Applications/Folder\\ Actions/")}"
+  system "open /System/Library/CoreServices/Folder\\ Actions\\ Setup.app"
+  system "open /System/Library/Image\\ Capture/Support/Application/AutoImporter.app"
 else
 
   if ARGV.first == 'process'
