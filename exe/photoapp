@@ -14,10 +14,15 @@ OptionParser.new do |opts|
 end.parse!
 
 def update
-  system "ln -s #{Photoapp.gem_dir('assets/Reprint.app')} /Applications/"
-  system "ln -s #{Photoapp.gem_dir('assets/Update.app')} /Applications/"
-  system "mkdir -p ~/Library/Workflows/Applications/Folder\\ Actions/"
-  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{File.expand_path("~/Library/Workflows/Applications/Folder\\ Actions/")}"
+  %w(Reprint Update).each do |app|
+    FileUtils.rm "/Applications/#{app}.app"
+    system "ln -s #{Photoapp.gem_dir("assets/#{app}.app")} /Applications/"
+  end
+
+  folder_actions_path = File.expand_path("~/Library/Workflows/Applications/Folder\\ Actions/")
+  system "mkdir -p #{folder_actions_path}"
+  system "rm -rf #{File.join(folder_actions_path, "photoapp-process.workflow")}"
+  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{folder_actions_path}"
 end
 
 def actions
