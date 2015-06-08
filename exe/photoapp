@@ -15,14 +15,14 @@ end.parse!
 
 def update
   %w(Reprint Update).each do |app|
-    FileUtils.rm "/Applications/#{app}.app"
-    system "ln -s #{Photoapp.gem_dir("assets/#{app}.app")} /Applications/"
+    system "rm -rf /Applications/#{app}.app"
+    system "cp -r #{Photoapp.gem_dir("assets/#{app}.app")} /Applications/"
   end
 
   folder_actions_path = File.expand_path("~/Library/Workflows/Applications/Folder\\ Actions/")
   system "mkdir -p #{folder_actions_path}"
   system "rm -rf #{File.join(folder_actions_path, "photoapp-process.workflow")}"
-  system "ln -s #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{folder_actions_path}"
+  system "cp -r #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{folder_actions_path}"
 end
 
 def actions
