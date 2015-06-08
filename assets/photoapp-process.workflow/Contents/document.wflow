@@ -61,7 +61,8 @@
 					<key>COMMAND_STRING</key>
 					<string>say "processing photos"
 source ~/.bash_profile
-photoapp process "$(dirname $1)"</string>
+photoapp process "$(dirname $1)"
+say "processing complete"</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -176,7 +177,7 @@ photoapp process "$(dirname $1)"</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>369.000000:433.000000</string>
+				<string>369.000000:253.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
