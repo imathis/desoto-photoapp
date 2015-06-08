@@ -59,9 +59,10 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>source ~/.bash_profile
+					<string>say "Updating Photo app"
+source ~/.bash_profile
 gem update desoto-photoapp
-photoapp setup
+photoapp update
 say "Photo app updated"</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
