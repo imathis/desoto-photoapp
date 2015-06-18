@@ -1,2 +1,2 @@
 module Photoapp
-  VERSION = "0.3.4" end
+  VERSION = "0.3.5" end

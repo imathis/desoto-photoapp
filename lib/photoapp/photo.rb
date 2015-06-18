@@ -61,7 +61,7 @@ module Photoapp
     end
 
     def add_to_photos
-      `automator -i #{config['print']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
+      `automator -i #{print_dest} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
     end
 
     def cleanup
