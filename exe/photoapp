@@ -52,7 +52,11 @@ if options['version']
   abort
 end
 
-if ARGV.first == 'setup'
+if ARGV.first == 'test'
+  path = ARGV.shift 
+  photo = Photoapp.process_photo(path, path.sub(/\.jpe?g/i, '.copy.jpg'))
+  photo.write
+elsif ARGV.first == 'setup'
   ARGV.shift
   setup
 elsif ARGV.first == 'update'

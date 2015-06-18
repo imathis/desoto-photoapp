@@ -26,7 +26,6 @@ module Photoapp
     UPLOAD = 'upload'
     PRINT = 'print'
 
-
     def initialize(options={})
       @photos = []
       @config = config(options)
@@ -62,12 +61,22 @@ module Photoapp
 
     end
 
+    def logo
+      @logo ||= Magick::Image.read(config['watermark']).first
+    end
+
+    def process_image(photo, destination)
+      path = File.join(destination, File.basename(photo))
+      FileUtils.mv photo, path
+      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
+      Photo.new(path, logo, self)
+    end
+
     def root(path='')
       File.expand_path(File.join(ROOT, path))
     end
 
     def process
-      logo = Magick::Image.read(config['watermark']).first
       photos = []
       tmp = root('.tmp')
       FileUtils.mkdir_p tmp
@@ -77,18 +86,12 @@ module Photoapp
       end
 
       load_photos.each do |f|
-        path = File.join(tmp, File.basename(f))
-        FileUtils.mv f, path
-        `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
-        photos << Photo.new(path, logo, self)
+        photos << process_image(f, tmp)
       end
 
       photos.each do |p|
         p.write
         p.add_to_photos
-      end
-
-      photos.each do |p|
         Photoapp.print(p.print_dest)
       end
 
