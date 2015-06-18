@@ -21,7 +21,7 @@ module Photoapp
     end
 
     def watermark
-      @watermarked ||= image.composite(logo, SouthWestGravity, 40, 40, OverCompositeOp)
+      @watermarked ||= image.composite(logo, SouthWestGravity, 80, 40, OverCompositeOp)
     end
 
     def with_url
@@ -29,8 +29,8 @@ module Photoapp
         light_url = add_url("#fff")
         dark_url  = add_url("#000", true).blur_image(radius=6.0, sigma=2.0)
         watermark.dup
-          .composite(dark_url, SouthEastGravity, 40, 40, OverCompositeOp)
-          .composite(light_url, SouthEastGravity, 40, 40, OverCompositeOp)
+          .composite(dark_url, SouthEastGravity, 80, 40, OverCompositeOp)
+          .composite(light_url, SouthEastGravity, 80, 40, OverCompositeOp)
       end
     end
 
