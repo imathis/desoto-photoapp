@@ -21,7 +21,7 @@ module Photoapp
     end
 
     def watermark
-      @watermarked ||= image.composite(logo, SouthWestGravity, OverCompositeOp)
+      @watermarked ||= image.composite(logo, SouthWestGravity, 40, 40, OverCompositeOp)
     end
 
     def with_url
@@ -29,8 +29,8 @@ module Photoapp
         light_url = add_url("#fff")
         dark_url  = add_url("#000", true).blur_image(radius=6.0, sigma=2.0)
         watermark.dup
-          .composite(dark_url, SouthEastGravity, OverCompositeOp)
-          .composite(light_url, SouthEastGravity, OverCompositeOp)
+          .composite(dark_url, SouthEastGravity, 40, 40, OverCompositeOp)
+          .composite(light_url, SouthEastGravity, 40, 40, OverCompositeOp)
       end
     end
 
@@ -50,14 +50,20 @@ module Photoapp
       image
     end
 
-    def write
-      puts "writing #{upload_dest}"
-      puts "writing #{print_dest}"
-      FileUtils.mkdir_p(File.dirname(upload_dest))
-      FileUtils.mkdir_p(File.dirname(print_dest))
-      watermark.write upload_dest
-      with_url.write print_dest
-      cleanup
+    def write(path=nil)
+      if path
+        FileUtils.mkdir_p(File.dirname(path))
+        with_url.write path
+        cleanup
+      else
+        puts "writing #{upload_dest}"
+        puts "writing #{print_dest}"
+        FileUtils.mkdir_p(File.dirname(upload_dest))
+        FileUtils.mkdir_p(File.dirname(print_dest))
+        watermark.write upload_dest
+        with_url.write print_dest
+        cleanup
+      end
     end
 
     def add_to_photos

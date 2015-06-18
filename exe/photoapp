@@ -53,9 +53,10 @@ if options['version']
 end
 
 if ARGV.first == 'test'
-  path = ARGV.shift 
-  photo = Photoapp.process_photo(path, path.sub(/\.jpe?g/i, '.copy.jpg'))
-  photo.write
+  ARGV.shift
+  path = ARGV.join('')
+  session = Photoapp::Session.new(options)
+  session.test_image(path)
 elsif ARGV.first == 'setup'
   ARGV.shift
   setup

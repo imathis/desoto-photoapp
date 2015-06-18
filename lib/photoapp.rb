@@ -65,13 +65,6 @@ module Photoapp
       @logo ||= Magick::Image.read(config['watermark']).first
     end
 
-    def process_image(photo, destination)
-      path = File.join(destination, File.basename(photo))
-      FileUtils.mv photo, path
-      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
-      Photo.new(path, logo, self)
-    end
-
     def root(path='')
       File.expand_path(File.join(ROOT, path))
     end
@@ -100,6 +93,14 @@ module Photoapp
       FileUtils.rm_rf tmp
     end
 
+    def process_image(photo, destination)
+      path = File.join(destination, File.basename(photo))
+      FileUtils.mv photo, path
+      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
+      Photo.new(path, logo, self)
+    end
+
+
     def load_photos
       files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['source'], f) }
 
@@ -118,5 +119,17 @@ module Photoapp
       S3.new(@config).push
       FileUtils.rm_rf config['upload']
     end
+
+    # For processing a single image for testing purposes
+    #
+    def test_image(photo)
+      photo = File.expand_path(photo)
+      path = photo.sub(/\.jpe?g/i, '.copy.jpg')
+      FileUtils.cp photo, path
+      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
+
+      Photo.new(path, logo, self).write(path)
+    end
+
   end
 end
