@@ -86,8 +86,12 @@ module Photoapp
 
       photos.each do |p|
         p.write
-        upload
         p.add_to_photos
+      end
+
+      upload
+
+      photos.each do |p|
         Photoapp.print(p.print_dest)
       end
 
