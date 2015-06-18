@@ -63,7 +63,8 @@
 source ~/.bash_profile
 gem update desoto-photoapp
 photoapp update
-say "Photo app updated"</string>
+say "Photo app updated to version"
+photoapp -v | say</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>

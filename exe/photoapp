@@ -11,6 +11,9 @@ OptionParser.new do |opts|
   opts.on("-c", "--config PATH", String, "Path to config file") do |config|
     options['config'] = config
   end
+  opts.on("-v", "--version", "Version Number") do
+    options['version'] = true
+  end
 end.parse!
 
 def update
@@ -44,6 +47,11 @@ def setup
   actions
 end
 
+if options['version']
+  puts Photoapp::VERSION
+  abort
+end
+
 if ARGV.first == 'setup'
   ARGV.shift
   setup
@@ -54,7 +62,6 @@ elsif ARGV.first == 'set-actions'
   ARGV.shift
   actions
 else
-
   if ARGV.first == 'process'
     ARGV.shift
     options['source'] = ARGV.shift

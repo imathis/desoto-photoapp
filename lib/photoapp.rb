@@ -16,7 +16,6 @@ module Photoapp
     system "lpr #{path}"
   end
 
-
   class Session
     attr_accessor :photos, :print, :upload
 
@@ -89,11 +88,11 @@ module Photoapp
         p.add_to_photos
       end
 
-      upload
-
       photos.each do |p|
         Photoapp.print(p.print_dest)
       end
+
+      upload
 
       FileUtils.rm_rf tmp
     end
