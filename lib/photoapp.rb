@@ -79,10 +79,6 @@ module Photoapp
       FileUtils.mkdir_p tmp
       FileUtils.mkdir_p import
 
-      if empty_print_queue?
-        FileUtils.rm_rf(config['print'])
-      end
-
       load_photos.each do |f|
         photos << process_image(f, tmp)
       end
@@ -99,6 +95,7 @@ module Photoapp
 
       FileUtils.rm_rf tmp
       FileUtils.rm_rf import
+      FileUtils.rm_rf config['print']
     end
 
     def process_image(photo, destination)
