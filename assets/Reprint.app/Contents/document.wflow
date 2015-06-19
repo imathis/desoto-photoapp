@@ -59,11 +59,8 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>say "reprinting photos"
-for f in "$@"
-do
-  lpr $f
-done</string>
+					<string>source ~/.bash_profile
+photoapp reprint | say</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -87,6 +84,8 @@ done</string>
 				</array>
 				<key>Class Name</key>
 				<string>RunShellScriptAction</string>
+				<key>Disabled</key>
+				<false/>
 				<key>InputUUID</key>
 				<string>A88305AF-F481-4120-9873-CA58EDCA65B3</string>
 				<key>Keywords</key>

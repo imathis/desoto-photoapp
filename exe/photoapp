@@ -52,27 +52,25 @@ if options['version']
   abort
 end
 
-if ARGV.first == 'test'
-  ARGV.shift
+cmd = ARGV.shift
+
+case cmd
+when 'test'
   path = ARGV.join('')
   session = Photoapp::Session.new(options)
   session.test_image(path)
-elsif ARGV.first == 'setup'
-  ARGV.shift
+when 'setup'
   setup
-elsif ARGV.first == 'update'
-  ARGV.shift
+when 'update'
   update
-elsif ARGV.first == 'set-actions'
-  ARGV.shift
+when 'set-actions'
   actions
-else
-  if ARGV.first == 'process'
-    ARGV.shift
-    options['source'] = ARGV.shift
-    Photoapp::Session.new(options).process
-  elsif ARGV.first == 'upload'
-    Photoapp::Session.new(options).upload
-  end
+when 'process'
+  options['source'] = ARGV.shift
+  Photoapp::Session.new(options).process
+when 'upload'
+  Photoapp::Session.new(options).upload
+when 'reprint'
+  Photoapp::Session.new(options).reprint
 end
 

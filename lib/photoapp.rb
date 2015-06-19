@@ -19,16 +19,21 @@ module Photoapp
   class Session
     attr_accessor :photos, :print, :upload
 
-    ROOT = File.expand_path('~/cave.pics') # where photos are stored
-
     # relative to root
     CONFIG_FILE = 'photoapp.yml'
     UPLOAD = 'upload'
     PRINT = 'print'
+    ROOT = File.expand_path('~/cave.pics') # where photos are stored
+
 
     def initialize(options={})
       @photos = []
       @config = config(options)
+      FileUtils.mkdir_p(config['reprint'])
+    end
+
+    def root(path='')
+      File.expand_path(File.join(ROOT, path))
     end
 
     def config(options={})
@@ -42,7 +47,8 @@ module Photoapp
           'font_size' => 30,
           'config' => 'photoapp.yml',
           'upload' => 'upload',
-          'print' => 'print'
+          'print' => 'print',
+          'reprint' => 'reprint'
         }
  
         config_file = root(options['config'] || config['config'])
@@ -55,6 +61,7 @@ module Photoapp
 
         config['upload'] = root(config['upload'])
         config['print'] = root(config['print'])
+        config['reprint'] = root(config['reprint'])
 
         config
       end
@@ -63,10 +70,6 @@ module Photoapp
 
     def logo
       @logo ||= Magick::Image.read(config['watermark']).first
-    end
-
-    def root(path='')
-      File.expand_path(File.join(ROOT, path))
     end
 
     def process
@@ -118,6 +121,24 @@ module Photoapp
     def upload
       S3.new(@config).push
       FileUtils.rm_rf config['upload']
+    end
+
+    def reprint
+      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['reprint'], f) }
+      photos = Dir[*files].uniq
+      if !photos.empty?
+        system "lpr #{photos.join(' ')}"
+        if photos.size == 1
+          puts "Printing #{photos.size} photo"
+        else
+          puts "Printing #{photos.size} photos"
+        end
+      else
+        puts "No photos to print"
+      end
+
+      sleep 4
+      FileUtils.rm(photos)
     end
 
     # For processing a single image for testing purposes
