@@ -75,7 +75,9 @@ module Photoapp
     def process
       photos = []
       tmp = root('.tmp')
+      import = root('.import/')
       FileUtils.mkdir_p tmp
+      FileUtils.mkdir_p import
 
       if empty_print_queue?
         FileUtils.rm_rf(config['print'])
@@ -87,13 +89,16 @@ module Photoapp
 
       photos.each do |p|
         p.write
-        p.add_to_photos
+        FileUtils.cp p.print_dest, import
         Photoapp.print(p.print_dest)
       end
+
+      `automator -i #{import} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
 
       upload
 
       FileUtils.rm_rf tmp
+      FileUtils.rm_rf import
     end
 
     def process_image(photo, destination)

@@ -66,10 +66,6 @@ module Photoapp
       end
     end
 
-    def add_to_photos
-      `automator -i #{print_dest} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
-    end
-
     def cleanup
       watermark.destroy!
       with_url.destroy!
