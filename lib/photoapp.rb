@@ -75,7 +75,7 @@ module Photoapp
     def process
       photos = []
       tmp = root('.tmp')
-      import = root('.import/')
+      import = root('import')
       FileUtils.mkdir_p tmp
       FileUtils.mkdir_p import
 
