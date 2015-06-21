@@ -73,20 +73,21 @@ module Photoapp
     end
 
     def process
-      photos = []
+      photos = load_photos
       tmp = root('.tmp')
       import = root('import')
       FileUtils.mkdir_p tmp
       FileUtils.mkdir_p import
 
-      load_photos.each do |f|
-        photos << process_image(f, tmp)
+      photos.map! do |f|
+        p = process_image(f, tmp)
+        p.write
+        p
       end
 
       photos.each do |p|
-        p.write
-        FileUtils.cp p.print_dest, import
-        Photoapp.print(p.print_dest)
+        FileUtils.cp(p.print_dest, import)
+        system "lpr #{p.print_dest}"
       end
 
       `automator -i #{import} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
