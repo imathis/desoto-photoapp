@@ -55,6 +55,24 @@ end
 cmd = ARGV.shift
 
 case cmd
+when 'config'
+  case ARGV.shift
+  when 'printer'
+    system 'open http://127.0.0.1:631/printers/'
+    system 'say "Choose the printer you want to configure"'
+    sleep 3
+    system 'say "Select Set Default Options from the Administration drop-down."'
+    sleep 3
+    system 'say "then configure your printer based on the settings you see here"'
+    sleep 3
+    system 'open https://github.com/imathis/desoto-photoapp#default-printer-settings'
+  when 'import'
+    system 'say "launching AutoImporter, press command comma to change settings"'
+    system 'open /System/Library/Image\ Capture/Support/Application/AutoImporter.app'
+  when 'action'
+    system 'open /System/Library/CoreServices/Folder\ Actions\ Setup.app'
+    system 'say "Add an action for the cave.pics/import folder and select the photoapp process workflow from the list. Then close the app."'
+  end
 when 'test'
   path = ARGV.join('')
   session = Photoapp::Session.new(options)

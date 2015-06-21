@@ -33,7 +33,7 @@ This will do the following:
 Finally you'll need to enable the folder action to trigger photo processing when photos are added to the import folder. Launch the folder actions setup app:
 
 ```
-$ open /System/Library/CoreServices/Folder\ Actions\ Setup.app
+$ photoapp config action
 ```
 
 Then click `+` below the left column to add a new folder. Choose the folder where photos will be imported to, and click the `+` beneath the right panel to add an
@@ -44,7 +44,7 @@ click the "arrow in a box" icon in the bottom left to open up a drawer which wil
 the AutoImporter app. Next launch AutoImporter.
 
 ```
-open /System/Library/Image\ Capture/Support/Application/AutoImporter.app
+$ photoapp config import
 ```
 
 Configure it to import to the folder you have set to trigger the photos workflow and be sure it is set to delete photos after import.
@@ -52,6 +52,10 @@ Configure it to import to the folder you have set to trigger the photos workflow
 ## Printing
 
 This app uses CUPS to print. To configure your CUPS defaults:
+
+```
+$ photoapp config printer
+```
 
 - Visit [The CUPS printers page](http://127.0.0.1:631/printers/)
 - Choose the printer you want to configure
