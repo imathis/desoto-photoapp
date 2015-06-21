@@ -95,6 +95,7 @@ module Photoapp
       upload
 
       FileUtils.rm_rf tmp
+      FileUtils.rm_rf import
       FileUtils.rm_rf config['print']
     end
 
