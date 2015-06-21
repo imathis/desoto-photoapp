@@ -75,7 +75,7 @@ module Photoapp
     def process
       photos = load_photos
       tmp = root('.tmp')
-      import = root('import')
+      import = root('temp_import')
       FileUtils.mkdir_p tmp
       FileUtils.mkdir_p import
 
@@ -95,7 +95,6 @@ module Photoapp
       upload
 
       FileUtils.rm_rf tmp
-      FileUtils.rm_rf import
       FileUtils.rm_rf config['print']
     end
 
