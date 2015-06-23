@@ -58,14 +58,14 @@ case cmd
 when 'config'
   case ARGV.shift
   when 'printer'
+    system 'open https://github.com/imathis/desoto-photoapp#default-printer-settings'
+    system 'say "Configure your printer according to these configurations"'
+    sleep 3
     system 'open http://127.0.0.1:631/printers/'
     system 'say "Choose the printer you want to configure"'
     sleep 3
     system 'say "Select Set Default Options from the Administration drop-down."'
-    sleep 3
-    system 'say "then configure your printer based on the settings you see here"'
-    sleep 3
-    system 'open https://github.com/imathis/desoto-photoapp#default-printer-settings'
+    system 'say "Then refer to the printer configurations listed ealier."'
   when 'import'
     system 'say "launching AutoImporter, press command comma to change settings"'
     system 'open /System/Library/Image\ Capture/Support/Application/AutoImporter.app'
