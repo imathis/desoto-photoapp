@@ -10,6 +10,14 @@ Add this line to your application's Gemfile:
 gem 'desoto-photoapp'
 ```
 
+Install ImageMagick
+
+```
+brew remove imagemagick
+brew update && brew install imagemagick@6"
+brew link imagemagick@6
+```
+
 And then execute:
 
     $ bundle
@@ -17,7 +25,8 @@ And then execute:
 Install the [Automator actions](https://photosautomation.com/index.html) for importing photos. Download the [installer here](https://photosautomation.com/installer.zip).
 
 
-Run the setup command:
+
+Run the setup commands:
 
 ```
 $ photoapp setup

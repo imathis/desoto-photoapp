@@ -30,14 +30,11 @@ end
 
 def actions
   system "open /System/Library/Image\\ Capture/Support/Application/AutoImporter.app"
-  system "open /System/Library/CoreServices/Folder\\ Actions\\ Setup.app"
+
+  system 'open '+folder_actions_setup
 end
 
 def setup
-  if `brew list imagemagick` =~ /Error:/
-    system "brew update && brew install imagemagick"
-  end
-
   unless `ls /Library/Automator` =~ /Import Files into Photos/
     system "say 'please install Automator actions for Photos app'"
     system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
@@ -45,6 +42,25 @@ def setup
 
   update
   actions
+end
+
+def folder_actions_setup
+
+  @app_path ||= begin
+    app = 'Folder Actions Setup.app'
+    base = '/System/Library/CoreServices/'
+
+    old = File.join( base, app )
+    new = File.join( base, 'Applications', app )
+
+    path = if File.exist? old
+      old
+    elsif File.exist? new
+      new
+    end
+
+    path.gsub(' ', '\ ')
+  end
 end
 
 if options['version']
@@ -70,7 +86,7 @@ when 'config'
     system 'say "launching AutoImporter, press command comma to change settings"'
     system 'open /System/Library/Image\ Capture/Support/Application/AutoImporter.app'
   when 'action'
-    system 'open /System/Library/CoreServices/Folder\ Actions\ Setup.app'
+    system 'open '+folder_actions_setup
     system 'say "Add an action for the cave.pics/import folder and select the photoapp process workflow from the list. Then close the app."'
   end
 when 'test'

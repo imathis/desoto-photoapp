@@ -21,33 +21,59 @@ module Photoapp
     end
 
     def watermark
-      @watermarked ||= image.composite(logo, SouthWestGravity, 80, 40, OverCompositeOp)
+      @watermarked ||= begin
+        date = date_text
+        image.composite(logo, SouthWestGravity, 50, 40, OverCompositeOp)
+          .composite(date[0], SouthWestGravity, 5, -10, OverCompositeOp)
+          .composite(date[1], SouthWestGravity, 5, -10, OverCompositeOp)
+      end
     end
 
     def with_url
       @printable ||= begin
-        light_url = add_url("#fff")
-        dark_url  = add_url("#000", true).blur_image(radius=6.0, sigma=2.0)
+        url = url_text
         watermark.dup
-          .composite(dark_url, SouthEastGravity, 80, 40, OverCompositeOp)
-          .composite(light_url, SouthEastGravity, 80, 40, OverCompositeOp)
+          .composite(url[0], SouthEastGravity, 40, 30, OverCompositeOp)
+          .composite(url[1], SouthEastGravity, 40, 30, OverCompositeOp)
       end
     end
 
-    def add_url(color, stroke=false)
+    def url_text
+      add_shadowed_text "#{config['url_base']}/#{short}.jpg", config['font_size'], NorthEastGravity
+    end
+
+    def date_text
+      date = Time.now.strftime('%b %d, %Y')
+      add_shadowed_text date, config['date_font_size'], NorthEastGravity, 250
+    end
+
+    def add_shadowed_text(text, size, gravity, width=800)
       setting = config
-      image = Image.new(800,100) { self.background_color = "rgba(255, 255, 255, 0)" }
-      text = Draw.new
-      text.annotate(image, 0, 0, 60, 50, "#{setting['url_base']}/#{short}.jpg") do
-        text.gravity = SouthEastGravity
-        text.pointsize = setting['font_size']
-        text.fill = color
-        text.font = setting['font']
-        if stroke
-          text.stroke = color
+      shadowed_text = []
+
+      %w(#000 #fff).each do |color|
+        image = Image.new(width, 70) { self.background_color = "rgba(255, 255, 255, 0" }
+        txt = Draw.new
+        txt.annotate(image, 0, 0, 0, 0, text) do
+          txt.gravity = gravity
+          txt.pointsize = size
+          txt.fill = color
+          txt.font = setting['font']
+
+          if color == '#000'
+            txt.stroke = color
+          end
         end
+
+        # Blur drop shadow
+        if color == '#000'
+          image = image.blur_image(radius=6.0, sigma=2.0)
+        end
+
+        shadowed_text.push image
       end
-      image
+
+      shadowed_text
     end
 
     def write(path=nil)

@@ -41,10 +41,11 @@ module Photoapp
 
         config = {
           'source' => Dir.pwd, # where photos are located
-          'url_base' => 'www.cave.pics',
+          'url_base' => 'cave.pics',
           'watermark' => Photoapp.gem_dir('assets', 'watermark.png'),
           'font' => Photoapp.gem_dir('assets', "SourceSansPro-Semibold.ttf"),
-          'font_size' => 30,
+          'font_size' => 36,
+          'date_font_size' => 24,
           'config' => 'photoapp.yml',
           'upload' => 'upload',
           'print' => 'print',
