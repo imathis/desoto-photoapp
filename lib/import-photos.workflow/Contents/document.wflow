@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>AMApplicationBuild</key>
-	<string>409.2</string>
+	<string>428</string>
 	<key>AMApplicationVersion</key>
-	<string>2.5</string>
+	<string>2.7</string>
 	<key>AMDocumentVersion</key>
 	<string>2</string>
 	<key>actions</key>
@@ -100,12 +100,10 @@
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>369.000000:102.000000</string>
+				<string>309.000000:102.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Get Folder Contents.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -172,7 +170,7 @@
 					</dict>
 				</array>
 				<key>ActionBundlePath</key>
-				<string>/Library/Automator/PHOTOS-Import Files into Photos.action</string>
+				<string>/Applications/Photos.app/Contents/Library/Automator/Import Files into Photos.action</string>
 				<key>ActionName</key>
 				<string>Import Files into Photos</string>
 				<key>ActionParameters</key>
@@ -193,7 +191,7 @@
 					<false/>
 				</dict>
 				<key>BundleIdentifier</key>
-				<string>com.apple.Photos.PHOTOS-Import-Files-into-Photos</string>
+				<string>com.apple.Photos.Import-Files-into-Photos</string>
 				<key>CFBundleVersion</key>
 				<string>1</string>
 				<key>CanShowSelectedItemsWhenRun</key>
@@ -207,7 +205,7 @@
 				<key>Class Name</key>
 				<string>Import_Files_into_Photos</string>
 				<key>InputUUID</key>
-				<string>AE515AD8-B28E-4419-91DD-001C6B981322</string>
+				<string>027CC0A4-A313-4E71-9E75-393CD5FE390F</string>
 				<key>Keywords</key>
 				<array>
 					<string>photo</string>
@@ -215,9 +213,9 @@
 					<string>add</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>23C4E07E-0500-441B-9024-EAD5ED8AF0D1</string>
+				<string>23E383F8-3BF2-488C-9D7E-BD9A27665FBC</string>
 				<key>UUID</key>
-				<string>0002ECC9-3076-4082-ACDC-109FE99BE1BB</string>
+				<string>BA5F3E31-A134-42DD-9A39-0B60DF7CF90F</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Photos</string>
@@ -316,12 +314,14 @@
 						<string>6</string>
 					</dict>
 				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>369.000000:246.000000</string>
+				<string>309.000000:246.000000</string>
 				<key>nibPath</key>
-				<string>/Library/Automator/PHOTOS-Import Files into Photos.action/Contents/Resources/Base.lproj/main.nib</string>
+				<string>/Applications/Photos.app/Contents/Library/Automator/Import Files into Photos.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
 			<key>isViewVisible</key>
 			<true/>
@@ -329,12 +329,12 @@
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>1759EE8B-AA64-4632-94AC-E37AEC6335CC</key>
+		<key>5002C700-2936-49CF-AE81-F54AAF61D4C2</key>
 		<dict>
 			<key>from</key>
 			<string>D9697998-6689-432F-B927-2CF3245CBA89 - D9697998-6689-432F-B927-2CF3245CBA89</string>
 			<key>to</key>
-			<string>0002ECC9-3076-4082-ACDC-109FE99BE1BB - 0002ECC9-3076-4082-ACDC-109FE99BE1BB</string>
+			<string>BA5F3E31-A134-42DD-9A39-0B60DF7CF90F - BA5F3E31-A134-42DD-9A39-0B60DF7CF90F</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
