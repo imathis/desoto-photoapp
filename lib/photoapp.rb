@@ -49,7 +49,7 @@ module Photoapp
           'config' => 'photoapp.yml',
           'upload' => 'upload',
           'print' => 'print',
-          'import' => 'import',
+          'photos_import' => 'photos_import',
           'reprint' => 'reprint'
         }
  
@@ -63,7 +63,7 @@ module Photoapp
 
         config['upload']  = root(config['upload'])
         config['print']   = root(config['print'])
-        config['import']  = root(config['import'])
+        config['photos_import']  = root(config['photos_import'])
         config['reprint'] = root(config['reprint'])
 
         config
@@ -93,8 +93,8 @@ module Photoapp
     end
 
     def import
-      `automator -i #{config['import']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
-      FileUtils.rm_rf config['import']
+      `automator -i #{config['photos_import']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
+      FileUtils.rm_rf config['photos_import']
     end
 
     def print

@@ -113,7 +113,7 @@ module Photoapp
     end
 
     def import_dest
-      File.join(config['import'], short + '.jpg')
+      File.join(config['photos_import'], short + '.jpg')
     end
     
     def short
