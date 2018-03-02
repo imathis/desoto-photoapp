@@ -113,7 +113,7 @@ module Photoapp
 
 
     # grab all photos from config source
-    def load_photos(path)
+    def load_photos(path=nil)
       path ||= config['source']
       files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(path, f) }
 
