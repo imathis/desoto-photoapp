@@ -17,7 +17,7 @@ OptionParser.new do |opts|
 end.parse!
 
 def update
-  %w(Reprint Update).each do |app|
+  %w(Reprint Update Upload).each do |app|
     system "rm -rf /Applications/#{app}.app"
     system "cp -r #{Photoapp.gem_dir("assets/#{app}.app")} /Applications/"
   end

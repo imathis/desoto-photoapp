@@ -25,6 +25,17 @@ And then execute:
 Install the [Automator actions](https://photosautomation.com/index.html) for importing photos. Download the [installer here](https://photosautomation.com/installer.zip).
 
 
+Be sure your shell profile loads in executables.
+
+```
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+
+export RBENV_ROOT="$HOME/.rbenv"alias profile='vim ~/.bash_profile'
+alias pprofile='source ~/.bash_profile'
+
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+```
 
 Run the setup commands:
 
