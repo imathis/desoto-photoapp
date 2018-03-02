@@ -82,12 +82,19 @@ module Photoapp
         with_url.write path
         cleanup
       else
-        puts "writing #{upload_dest}"
-        puts "writing #{print_dest}"
         FileUtils.mkdir_p(File.dirname(upload_dest))
         FileUtils.mkdir_p(File.dirname(print_dest))
+        FileUtils.mkdir_p(File.dirname(import_dest))
+
+        puts "writing #{upload_dest}"
         watermark.write upload_dest
+
+        puts "writing #{print_dest}"
         with_url.write print_dest
+
+        puts "writing #{import_dest}"
+        with_url.write import_dest
+
         cleanup
       end
     end
@@ -105,6 +112,10 @@ module Photoapp
       File.join(config['print'], short + '.jpg')
     end
 
+    def import_dest
+      File.join(config['import'], short + '.jpg')
+    end
+    
     def short
       @short ||= begin
         now = Time.now

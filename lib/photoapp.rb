@@ -49,6 +49,7 @@ module Photoapp
           'config' => 'photoapp.yml',
           'upload' => 'upload',
           'print' => 'print',
+          'import' => 'import',
           'reprint' => 'reprint'
         }
  
@@ -60,8 +61,9 @@ module Photoapp
           config.merge!(YAML.load(File.read(config_file)) || {})
         end
 
-        config['upload'] = root(config['upload'])
-        config['print'] = root(config['print'])
+        config['upload']  = root(config['upload'])
+        config['print']   = root(config['print'])
+        config['import']  = root(config['import'])
         config['reprint'] = root(config['reprint'])
 
         config
@@ -76,9 +78,7 @@ module Photoapp
     def process
       photos = load_photos
       tmp = root('.tmp')
-      import = root('temp_import')
       FileUtils.mkdir_p tmp
-      FileUtils.mkdir_p import
 
       photos.map! do |f|
         p = process_image(f, tmp)
@@ -86,17 +86,21 @@ module Photoapp
         p
       end
 
-      photos.each do |p|
-        FileUtils.cp(p.print_dest, import)
-        system "lpr #{p.print_dest}"
-      end
-
-      `automator -i #{import} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
-
-      upload
+      import
+      print
 
       FileUtils.rm_rf tmp
-      FileUtils.rm_rf import
+    end
+
+    def import
+      `automator -i #{config['import']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
+      FileUtils.rm_rf config['import']
+    end
+
+    def print
+      load_photos(config['print']).each do |p|
+        system "lpr #{p}"
+      end
       FileUtils.rm_rf config['print']
     end
 
@@ -108,12 +112,15 @@ module Photoapp
     end
 
 
-    def load_photos
-      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['source'], f) }
+    # grab all photos from config source
+    def load_photos(path)
+      path ||= config['source']
+      files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(path, f) }
 
       Dir[*files].uniq
     end
 
+    # Check to see if the print queue is empty
     def empty_print_queue?
       if printer = `lpstat -d`
         if printer = printer.scan(/:\s*(.+)/).flatten.first
@@ -123,8 +130,16 @@ module Photoapp
     end
 
     def upload
-      S3.new(@config).push
-      FileUtils.rm_rf config['upload']
+      photos = load_photos(config['upload'])
+
+      if photos.size > 0
+        status = S3.new(@config).push
+        FileUtils.rm photos
+        many = photos.size != 1 ? "photos" : "photo"
+        puts "Uploaded #{photos.size} #{many}."
+      else
+        puts "There are no photos to upload."
+      end
     end
 
     def reprint

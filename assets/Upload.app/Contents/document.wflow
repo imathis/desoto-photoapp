@@ -59,12 +59,9 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>say "Updating Photo app"
-source ~/.bash_profile
-gem update desoto-photoapp
-photoapp update
-say "Photo app updated to version"
-photoapp -v | say</string>
+					<string>source ~/.bash_profile
+puts "Uploading photos"
+photoapp upload | say</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -177,7 +174,7 @@ photoapp -v | say</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>313.500000:253.000000</string>
+				<string>529.000000:253.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>

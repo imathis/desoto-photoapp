@@ -33,10 +33,10 @@ module Photoapp
       if !@bucket.exists?
         abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add-bucket`"
       else
-        puts "Syncing #{@local} files to #{@bucket_name} on S3."
+        puts "Syncing #{@local} files to #{@bucket_name} on S3." if @verbose
         write_files
         delete_files if delete_files?
-        status_message
+        status_message if @verbose
       end
     end
 
@@ -247,7 +247,7 @@ module Photoapp
 
     # Print consecutive characters
     def progress(str)
-      print str
+      print str if @verbose
       $stdout.flush
     end
 
