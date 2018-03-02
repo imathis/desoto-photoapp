@@ -106,5 +106,7 @@ when 'upload'
   Photoapp::Session.new(options).upload
 when 'reprint'
   Photoapp::Session.new(options).reprint
+when 'import'
+  Photoapp::Session.new(options).import
 end
 

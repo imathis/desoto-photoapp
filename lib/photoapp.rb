@@ -39,6 +39,8 @@ module Photoapp
     def config(options={})
       @config || begin
 
+        options['source'] ||= root('import')
+
         config = {
           'source' => Dir.pwd, # where photos are located
           'url_base' => 'cave.pics',
