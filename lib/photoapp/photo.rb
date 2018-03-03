@@ -17,7 +17,7 @@ module Photoapp
     end
 
     def image
-      @image ||= Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity)
+      @image ||= Image.read(file).first.resize_to_fill(2100, 1500, NorthGravity).modulate(0.99, 1.15).unsharp_mask(4.0, 1.5).sharpen(1.0, 1.1)
     end
 
     def watermark

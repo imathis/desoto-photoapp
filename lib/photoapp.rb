@@ -88,6 +88,8 @@ module Photoapp
         p
       end
 
+      optimize
+
       import
       print
 
@@ -95,8 +97,26 @@ module Photoapp
     end
 
     def import
-      `automator -i #{config['photos_import']} #{Photoapp.gem_dir("lib/import-photos.workflow")}`
-      FileUtils.rm_rf config['photos_import']
+      script = %Q{osascript -e 'set filePosixPath to "#{config['photos_import']}"
+set importFolder to (POSIX file filePosixPath) as alias
+
+set extensionsList to {"jpg", "jpeg"}
+tell application "Finder" to set theFiles to every file of importFolder whose name extension is in extensionsList
+
+if (count of theFiles) > 0 then
+  set imageList to {}
+  repeat with i from 1 to number of items in theFiles
+    set this_item to item i of theFiles as alias
+    set the end of imageList to this_item
+  end repeat
+
+  tell application "Photos"
+      activate
+      delay 1
+      import imageList skip check duplicates yes
+  end tell
+end if'}
+      `#{script}`
     end
 
     def print
@@ -109,10 +129,19 @@ module Photoapp
     def process_image(photo, destination)
       path = File.join(destination, File.basename(photo))
       FileUtils.mv photo, path
-      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
       Photo.new(path, logo, self)
     end
 
+    def optimize(path=nil)
+      path ||= config['upload']
+      exec = Photoapp.gem_dir("bin/imageOptim")
+
+      if File.directory?(path)
+        `#{exec} -d #{path}`
+      else
+        `find #{path} | #{exec}`
+      end
+    end
 
     # grab all photos from config source
     def load_photos(path=nil)
@@ -168,9 +197,9 @@ module Photoapp
       photo = File.expand_path(photo)
       path = photo.sub(/\.jpe?g/i, '.copy.jpg')
       FileUtils.cp photo, path
-      `automator -i #{path} #{Photoapp.gem_dir("lib/adjust-image.workflow")}`
 
       Photo.new(path, logo, self).write(path)
+      optimize path
     end
 
   end

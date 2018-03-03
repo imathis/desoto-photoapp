@@ -108,5 +108,10 @@ when 'reprint'
   Photoapp::Session.new(options).reprint
 when 'import'
   Photoapp::Session.new(options).import
+when 'print'
+  Photoapp::Session.new(options).print
+when 'optimize'
+  path = ARGV.join('')
+  path = nil if path.empty?
+  Photoapp::Session.new(options).optimize path
 end
-
