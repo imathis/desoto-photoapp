@@ -50,6 +50,7 @@ module Photoapp
           'date_font_size' => 24,
           'config' => 'photoapp.yml',
           'upload' => 'upload',
+          'upload_queue' => 'upload_queue',
           'print' => 'print',
           'photos_import' => 'photos_import',
           'reprint' => 'reprint'
@@ -64,6 +65,7 @@ module Photoapp
         end
 
         config['upload']  = root(config['upload'])
+        config['upload_queue']  = root(config['upload_queue'])
         config['print']   = root(config['print'])
         config['photos_import']  = root(config['photos_import'])
         config['reprint'] = root(config['reprint'])
@@ -78,24 +80,33 @@ module Photoapp
     end
 
     def process
+
       photos = load_photos
-      tmp = root('.tmp')
-      FileUtils.mkdir_p tmp
+      unless photos.empty?
 
-      photos.map! do |f|
-        p = process_image(f, tmp)
-        p.write
-        p
+        # Announce photos
+        noun = photos.size == 1 ? "photo" : "photos"
+        system "say -v 'Daniel' 'processing #{photos.size} #{noun}'"
+
+        tmp = root('.tmp')
+        FileUtils.mkdir_p tmp
+
+        photos.map! do |f|
+          p = process_image(f, tmp)
+          p.write
+          p
+        end
+
+        optimize
+
+        import
+        print
+
+        FileUtils.rm_rf tmp
       end
-
-      optimize
-
-      import
-      print
-
-      FileUtils.rm_rf tmp
     end
 
+    # Import to Photos.app via AppleScript
     def import
       script = %Q{osascript -e 'set filePosixPath to "#{config['photos_import']}"
 set importFolder to (POSIX file filePosixPath) as alias
@@ -117,6 +128,7 @@ if (count of theFiles) > 0 then
   end tell
 end if'}
       `#{script}`
+      FileUtils.rm_rf config['photos_import']
     end
 
     def print
@@ -164,12 +176,14 @@ end if'}
       photos = load_photos(config['upload'])
 
       if photos.size > 0
+        FileUtils.mkdir_p config['upload_queue']
+        FileUtils.mv photos, config['upload_queue']
+        
         status = S3.new(@config).push
-        FileUtils.rm photos
+        FileUtils.rm_rf config['upload_queue']
+
         many = photos.size != 1 ? "photos" : "photo"
-        puts "Uploaded #{photos.size} #{many}."
-      else
-        puts "There are no photos to upload."
+        system "say -v 'Daniel' 'Uploaded #{photos.size} #{many}.'"
       end
     end
 
@@ -178,11 +192,8 @@ end if'}
       photos = Dir[*files].uniq
       if !photos.empty?
         system "lpr #{photos.join(' ')}"
-        if photos.size == 1
-          puts "Printing #{photos.size} photo"
-        else
-          puts "Printing #{photos.size} photos"
-        end
+        count = photos.size == 1 ? "photo" : "photos"
+        puts "Printing #{photos.size} #{count}"
       else
         puts "No photos to print"
       end
@@ -200,6 +211,32 @@ end if'}
 
       Photo.new(path, logo, self).write(path)
       optimize path
+    end
+
+    def plist
+      %Q{<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>KeepAlive</key>
+    <dict>
+      <key>SuccessfulExit</key>
+      <false/>
+    </dict>
+    <key>Label</key>
+    <string>com.desotocaverns.photoapp</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>#{Photoapp.gem_dir('bin', 'process.sh')}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>WorkingDirectory</key>
+    <string>#{root}</string>
+    <key>StartInterval</key>
+    <integer>60</integer>
+  </dict>
+</plist>}
     end
 
   end

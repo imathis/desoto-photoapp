@@ -21,25 +21,30 @@ def update
     system "rm -rf /Applications/#{app}.app"
     system "cp -r #{Photoapp.gem_dir("assets/#{app}.app")} /Applications/"
   end
+  
+  install_plist
+end
 
-  folder_actions_path = File.expand_path("~/Library/Workflows/Applications/Folder\\ Actions/")
-  system "mkdir -p #{folder_actions_path}"
-  system "rm -rf #{File.join(folder_actions_path, "photoapp-process.workflow")}"
-  system "cp -r #{Photoapp.gem_dir('assets/photoapp-process.workflow')} #{folder_actions_path}"
+def install_plist
+  path = File.expand_path("~/Library/LaunchAgents")
+  FileUtils.mkdir_p(path)
+
+  dest = File.join(path, 'com.desotocaverns.photoapp.plist')
+  plist = Photoapp::Session.new({}).plist
+
+  File.open(dest, 'w') do |io|
+    io.write(plist)
+  end
+
+  system "launchctl unload #{dest}"
+  system "launchctl load -w -F #{dest}"
 end
 
 def actions
   system "open /System/Library/Image\\ Capture/Support/Application/AutoImporter.app"
-
-  system 'open '+folder_actions_setup
 end
 
 def setup
-  unless `ls /Library/Automator` =~ /Import Files into Photos/
-    system "say 'please install Automator actions for Photos app'"
-    system "open #{Photoapp.gem_dir('assets/photos-action-installer.pkg')}"
-  end
-
   update
   actions
 end
@@ -97,6 +102,8 @@ when 'setup'
   setup
 when 'update'
   update
+when 'plist'
+  install_plist
 when 'set-actions'
   actions
 when 'process'
