@@ -11,7 +11,7 @@ module Photoapp
         abort "Deploying to S3 requires the aws-sdk-v1 gem. Install with `gem install aws-sdk-v1`."
       end
       @options     = options
-      @local       = File.expand_path(options['upload'] || 'upload')
+      @local       = File.expand_path(options['upload_queue'] || 'upload_queue')
       @bucket_name = options['bucket_name']
       @access_key  = options['access_key_id']     || ENV['AWS_ACCESS_KEY_ID']
       @secret_key  = options['secret_access_key'] || ENV['AWS_SECRET_ACCESS_KEY']
