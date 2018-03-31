@@ -52,8 +52,11 @@ module Photoapp
           'upload' => 'upload',
           'upload_queue' => 'upload_queue',
           'print' => 'print',
+          'print_duplicate' => false,
           'photos_import' => 'photos_import',
-          'reprint' => 'reprint'
+          'import_alt' => false,
+          'reprint' => 'reprint',
+          'interval' => 60
         }
  
         config_file = root(options['config'] || config['config'])
@@ -69,6 +72,8 @@ module Photoapp
         config['print']   = root(config['print'])
         config['photos_import']  = root(config['photos_import'])
         config['reprint'] = root(config['reprint'])
+        config['import_alt'] = File.expand_path(config['import_alt']) if config['import_alt']
+        config['print_duplicate'] = File.expand_path(config['print_duplicate']) if config['print_duplicate']
 
         config
       end
@@ -106,9 +111,14 @@ module Photoapp
       end
     end
 
+    def import_alt
+      import(config['import_alt']) if config['import_alt']
+    end
+
     # Import to Photos.app via AppleScript
-    def import
-      script = %Q{osascript -e 'set filePosixPath to "#{config['photos_import']}"
+    def import(path=nil)
+      path ||= config['photos_import']
+      script = %Q{osascript -e 'set filePosixPath to "#{path}"
 set importFolder to (POSIX file filePosixPath) as alias
 
 set extensionsList to {"jpg", "jpeg"}
@@ -128,7 +138,7 @@ if (count of theFiles) > 0 then
   end tell
 end if'}
       `#{script}`
-      FileUtils.rm_rf config['photos_import']
+      FileUtils.rm load_photos(config['photos_import'])
     end
 
     def print
@@ -234,7 +244,7 @@ end if'}
     <key>WorkingDirectory</key>
     <string>#{root}</string>
     <key>StartInterval</key>
-    <integer>60</integer>
+    <integer>#{config['interval']}</integer>
   </dict>
 </plist>}
     end

@@ -84,6 +84,7 @@ module Photoapp
       else
         FileUtils.mkdir_p(File.dirname(upload_dest))
         FileUtils.mkdir_p(File.dirname(print_dest))
+        FileUtils.mkdir_p(File.dirname(print_dup_dest)) if print_dup_dest
         FileUtils.mkdir_p(File.dirname(import_dest))
 
         puts "writing #{upload_dest}"
@@ -91,6 +92,11 @@ module Photoapp
 
         puts "writing #{print_dest}"
         with_url.write print_dest
+
+        if print_dup_dest
+          puts "writing #{print_dup_dest}"
+          with_url.write print_dest
+        end
 
         puts "writing #{import_dest}"
         with_url.write import_dest
@@ -110,6 +116,12 @@ module Photoapp
 
     def print_dest
       File.join(config['print'], short + '.jpg')
+    end
+
+    def print_dup_dest
+      if config['print_duplicate']
+        File.join(config['print_duplicate'], short + '.jpg')
+      end
     end
 
     def import_dest

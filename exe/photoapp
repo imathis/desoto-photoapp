@@ -115,6 +115,8 @@ when 'reprint'
   Photoapp::Session.new(options).reprint
 when 'import'
   Photoapp::Session.new(options).import
+when 'import_alt'
+  Photoapp::Session.new(options).import_alt
 when 'print'
   Photoapp::Session.new(options).print
 when 'optimize'
