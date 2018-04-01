@@ -138,7 +138,7 @@ if (count of theFiles) > 0 then
   end tell
 end if'}
       `#{script}`
-      FileUtils.rm load_photos(config['photos_import'])
+      FileUtils.rm load_photos(path)
     end
 
     def print

@@ -95,7 +95,7 @@ module Photoapp
 
         if print_dup_dest
           puts "writing #{print_dup_dest}"
-          with_url.write print_dest
+          with_url.write print_dup_dest
         end
 
         puts "writing #{import_dest}"
