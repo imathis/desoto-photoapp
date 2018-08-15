@@ -1,4 +1,4 @@
-# Photoapp
+# GuestPhoto
 
 This is a tool for automating the photo system at DeSoto Caverns.
 
