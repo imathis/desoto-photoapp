@@ -197,13 +197,17 @@ end if'}
       end
     end
 
-    def reprint
+    def reprint(prints = 1)
+      prints = prints.to_i < 1 ? 1 : prints.to_i
+
       files = ['*.jpg', '*.JPG', '*.JPEG', '*.jpeg'].map! { |f| File.join(config['reprint'], f) }
       photos = Dir[*files].uniq
       if !photos.empty?
-        system "lpr #{photos.join(' ')}"
-        count = photos.size == 1 ? "photo" : "photos"
-        puts "Printing #{photos.size} #{count}"
+        count  = photos.size == 1 ? "photo" : "photos"
+        copies = photos.size == 1 ? "copy" : "copies"
+        puts "Printing #{prints} #{copies} of #{photos.size} #{count}"
+
+        system "lpr #{photos.join(' ')} -#{prints}"
       else
         puts "No photos to print"
       end
